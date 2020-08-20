@@ -37,20 +37,20 @@ namespace memory
 		HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, process_id);
 
 		Module32First(snapshot, &module_entry);
-        if (!module_name.compare((module_entry.szModule)))
-        {
-            CloseHandle(snapshot);
-            return reinterpret_cast<std::uintptr_t>(module_entry.modBaseAddr);
-        }
+		if (!module_name.compare((module_entry.szModule)))
+		{
+		    CloseHandle(snapshot);
+		    return reinterpret_cast<std::uintptr_t>(module_entry.modBaseAddr);
+		}
 
-        while (Module32Next(snapshot, &module_entry))
-        {
-            if (!module_name.compare(module_entry.szModule))
-            {
-                CloseHandle(snapshot);
-                return reinterpret_cast<std::uintptr_t>(module_entry.modBaseAddr);
-            }
-        }
+		while (Module32Next(snapshot, &module_entry))
+		{
+		    if (!module_name.compare(module_entry.szModule))
+		    {
+			CloseHandle(snapshot);
+			return reinterpret_cast<std::uintptr_t>(module_entry.modBaseAddr);
+		    }
+		}
 
 		CloseHandle(snapshot);
 		return 0;
