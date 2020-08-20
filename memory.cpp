@@ -103,9 +103,4 @@ namespace memory
 
 		return 0;
 	}
-
-	std::uintptr_t resolve_remote_mov_instruction(HANDLE process_handle, std::uintptr_t module_base, std::uintptr_t address)
-	{
-		return (address + read<std::int32_t>(process_handle, address + 3) + 7) - module_base;
-	}
 }
