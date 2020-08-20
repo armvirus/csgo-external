@@ -1,7 +1,7 @@
 #include "stdafx.hpp"
 
-#define m_iTeamNum 0xF4
-#define m_iGlowIndex 0xA438
+#define team_offset 0xF4
+#define glow_index 0xA438
 
 namespace global_info
 {
@@ -76,16 +76,16 @@ int main()
 		std::uint32_t glow_manager = memory::read<std::uint32_t>(global_info::process_handle, global_info::module_base + glow_manager_offset);
 		std::uint32_t local_player = memory::read<std::uint32_t>(global_info::process_handle, global_info::module_base + local_player_offset);
 
-		int local_team = memory::read<int>(global_info::process_handle, local_player + m_iTeamNum);
+		int local_team = memory::read<int>(global_info::process_handle, local_player + team_offset);
 
 		for (int i = 0; i < 64; i++)
 		{
 			std::uint32_t entity = memory::read<std::uint32_t>(global_info::process_handle, global_info::module_base + entity_list_offset + i * 0x10);
 			if (entity == 0 || entity == local_player) continue;
 
-			int entity_team = memory::read<int>(global_info::process_handle, entity + m_iTeamNum);
+			int entity_team = memory::read<int>(global_info::process_handle, entity + team_offset);
 
-			std::uint32_t entity_glow_index = memory::read<std::uint32_t>(global_info::process_handle, entity + m_iGlowIndex) * 0x38;
+			std::uint32_t entity_glow_index = memory::read<std::uint32_t>(global_info::process_handle, entity + glow_index) * 0x38;
 
 			if (local_team == entity_team)
 			{
