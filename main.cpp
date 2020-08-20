@@ -23,7 +23,7 @@ std::uint32_t dump_sig(const char* signature, int extra, int offset)
 
 int main()
 {
-	std::printf("[+] starting [brzo-ebachalo]\n\n");
+	std::printf("[+] starting [armvirus]\n\n");
 
 	global_info::process_id = memory::find_process_id("csgo.exe");
 
