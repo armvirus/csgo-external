@@ -2,6 +2,7 @@
 
 #define team_offset 0xF4
 #define glow_index 0xA438
+#define crosshair_index 0xB3E4
 
 namespace global_info
 {
@@ -64,10 +65,12 @@ int main()
 	std::uint32_t glow_manager_offset = dump_sig("A1 ? ? ? ? A8 01 75 4B", 4, 1);
 	std::uint32_t local_player_offset = dump_sig("8D 34 85 ? ? ? ? 89 15 ? ? ? ? 8B 41 08 8B 48 04 83 F9 FF", 4, 3);
 	std::uint32_t entity_list_offset = dump_sig("BB ? ? ? ? 83 FF 01 0F 8C ? ? ? ? 3B F8", 0, 1);
+	std::uint32_t force_attack_offset = dump_sig("89 0D ? ? ? ? 8B 0D ? ? ? ? 8B F2 8B C1 83 CE 04", 0, 2);
 
 	printf("[+] dumped glow manager offset [0x%x]\n", glow_manager_offset);
 	printf("[+] dumped local player offset [0x%x]\n", local_player_offset);
 	printf("[+] dumped entity list offset [0x%x]\n", entity_list_offset);
+	printf("[+] dumped force attack offset [0x%x]\n", force_attack_offset);
 
 	printf("\n[+] press [F1] to close\n");
 
@@ -104,6 +107,16 @@ int main()
 
 			memory::write<bool>(global_info::process_handle, glow_manager + entity_glow_index + 0x24, true);
 			memory::write<bool>(global_info::process_handle, glow_manager + entity_glow_index + 0x25, false);
+
+			int crosshair_id = memory::read<int>(global_info::process_handle, local_player + crosshair_index);
+			std::uint32_t crosshair_team_id = memory::read<std::uint32_t>(global_info::process_handle, global_info::module_base + entity_list_offset + (crosshair_id - 1) * 0x10);
+			int crosshair_team = memory::read<int>(global_info::process_handle, crosshair_team_id + m_iTeamNum);
+
+			if (crosshair_id > 0 && crosshair_id < 32 && local_team != crosshair_team)
+			{
+				memory::write<int>(global_info::process_handle, global_info::module_base + force_attack_offset, 5);
+				memory::write<int>(global_info::process_handle, global_info::module_base + force_attack_offset, 4);
+			}
 		}
 	}
 
