@@ -110,7 +110,7 @@ int main()
 
 			int crosshair_id = memory::read<int>(global_info::process_handle, local_player + crosshair_index);
 			std::uint32_t crosshair_team_id = memory::read<std::uint32_t>(global_info::process_handle, global_info::module_base + entity_list_offset + (crosshair_id - 1) * 0x10);
-			int crosshair_team = memory::read<int>(global_info::process_handle, crosshair_team_id + m_iTeamNum);
+			int crosshair_team = memory::read<int>(global_info::process_handle, crosshair_team_id + team_offset);
 
 			if (crosshair_id > 0 && crosshair_id < 32 && local_team != crosshair_team)
 			{
